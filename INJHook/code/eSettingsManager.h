@@ -8,9 +8,10 @@ public:
 	void Init();
 
 	bool bEnableConsoleWindow;
+	bool bEnableGamepadSupport;
 
 	int iHookMenuOpenKey;
-	
+	int iResetStageInteractablesKey;
 	
 	// free camera keys
 	int iFreeCameraKeyXPlus;
@@ -33,6 +34,7 @@ public:
 	float fMenuScale;
 
 	void SaveSettings();
+	void ResetKeys();
 
 };
 

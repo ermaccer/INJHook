@@ -177,124 +177,29 @@ void DCFMenu::Draw()
 	{
 		if (ImGui::BeginTabItem("Character Modifier"))
 		{
-			ImGui::Checkbox("Enable Player 1 Modifier", &m_bPlayer1Modifier);
-
-			if (ImGui::BeginCombo("Player 1 Character", szPlayer1ModifierCharacter))
-			{
-				for (int n = 0; n < IM_ARRAYSIZE(szCharacters); n++)
-				{
-					bool is_selected = (szPlayer1ModifierCharacter == szCharacters[n]);
-					if (ImGui::Selectable(szCharacters[n], is_selected))
-						sprintf(szPlayer1ModifierCharacter, szCharacters[n]);
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();
-
-				}
-				ImGui::EndCombo();
-			}
-			ImGui::Separator();
-			ImGui::Checkbox("Enable Player 2 Modifier", &m_bPlayer2Modifier);
-
-			if (ImGui::BeginCombo("Player 2 Character", szPlayer2ModifierCharacter))
-			{
-				for (int n = 0; n < IM_ARRAYSIZE(szCharacters); n++)
-				{
-					bool is_selected = (szPlayer2ModifierCharacter == szCharacters[n]);
-					if (ImGui::Selectable(szCharacters[n], is_selected))
-						sprintf(szPlayer2ModifierCharacter, szCharacters[n]);
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();
-				}
-				ImGui::EndCombo();
-			}
-
+			DrawCharacterTab();
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Stage Modifier"))
 		{
-			ImGui::Checkbox("Enable Stage Modifier", &m_bStageModifier);
-
-			if (ImGui::BeginCombo("Stage", szStageModifierStage))
-			{
-				for (int n = 0; n < IM_ARRAYSIZE(szStageNames); n++)
-				{
-					bool is_selected = (szStageModifierStage == szStageNames[n]);
-					if (ImGui::Selectable(szStageNames[n], is_selected))
-						sprintf(szStageModifierStage, szStageNames[n]);
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();
-
-				}
-				ImGui::EndCombo();
-			}
-
-			if (ImGui::Button("Reset Stage Objects"))
-				ResetStageInteractables();
+			DrawStageTab();
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Camera Control"))
 		{
-			ImGui::Checkbox("Set Camera Position", &m_bCustomCameraPos);
-			ImGui::InputFloat3("X | Y | Z", &camPos.X);
-			ImGui::Checkbox("Set Camera Rotation", &m_bCustomCameraRot);
-			ImGui::InputInt3("Pitch | Yaw | Roll", &camRot.Pitch);
-			ImGui::Checkbox("Set FOV", &m_bCustomCameraFOV);
-			ImGui::InputFloat("FOV", &camFov);
-			ImGui::Separator();
-			ImGui::Checkbox("Enable Freecam", &m_bFreeCam);
-			ImGui::SameLine(); ShowHelpMarker("Allows to move camera with certain keys.\nRequires all toggles enabled!\nYou can configure keys in .ini file.");
-
-			if (m_bFreeCam)
-			{
-				if (!m_bCustomCameraPos || !m_bCustomCameraRot || !m_bCustomCameraFOV)
-					ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f), "Check rest of the Set Camera options!");
-
-				ImGui::InputFloat("Freecam Speed", &m_fFreeCameraSpeed);
-				ImGui::InputInt("Freecam Rotation Speed", &m_nFreeCameraRotationSpeed);
-			}
-
+			DrawCameraTab();
 			ImGui::EndTabItem();
 
 		}
 		if (ImGui::BeginTabItem("Cheats"))
 		{
-			ImGui::Separator();
-			ImGui::Columns(2);
-			ImGui::SetColumnWidth(0, 11.5f * ImGui::GetFontSize());
+			DrawCheatsTab();
+			ImGui::EndTabItem();
+		}
 
-			ImGui::Text("Infinite Health");
-			ImGui::NextColumn();
-			ImGui::Checkbox("P1##infhealth", &m_bInfiniteHealthP1);
-			ImGui::SameLine();
-			ImGui::Checkbox("P2##infhealth", &m_bInfiniteHealthP2);
-			ImGui::NextColumn();
-
-
-			ImGui::Text("Zero Health\n");
-			ImGui::NextColumn();
-			ImGui::Checkbox("P1##0health", &m_bNoHealthP1);
-			ImGui::SameLine();
-			ImGui::Checkbox("P2##0health", &m_bNoHealthP2);
-			ImGui::NextColumn();
-
-			ImGui::Text("Infinite Meter\n");
-			ImGui::NextColumn();
-			ImGui::Checkbox("P1##super", &m_bInfiniteMeterP1);
-			ImGui::SameLine();
-			ImGui::Checkbox("P2##super", &m_bInfiniteMeterP2);
-			ImGui::NextColumn();
-
-			ImGui::Text("Zero Meter\n");
-			ImGui::NextColumn();
-			ImGui::Checkbox("P1##0super", &m_bZeroMeterP1);
-			ImGui::SameLine();
-			ImGui::Checkbox("P2##0super", &m_bZeroMeterP2);
-			ImGui::NextColumn();
-
-
-			ImGui::Columns(1);
-			
-
+		if (ImGui::BeginTabItem("Script"))
+		{
+			DrawScriptTab();
 			ImGui::EndTabItem();
 		}
 	}
@@ -350,6 +255,217 @@ void DCFMenu::UpdateControls()
 		}
 
 	}
+
+
+	if (!m_bIsActive)
+	{
+		if (GetAsyncKeyState(SettingsMgr->iResetStageInteractablesKey) & 0x1)
+		{
+			if (GetObj(PLAYER1) && GetObj(PLAYER2))
+				GetGameInfo()->ResetStageInteractables();
+			else
+			{
+				Notifications->SetNotificationTime(2500);
+				Notifications->PushNotification("Stage objects can only be reset in game!");
+			}
+		}
+
+		ProcessScriptHotkeys();
+	}
+}
+
+void DCFMenu::DrawCharacterTab()
+{
+	ImGui::Checkbox("Enable Player 1 Modifier", &m_bPlayer1Modifier);
+
+	if (ImGui::BeginCombo("Player 1 Character", szPlayer1ModifierCharacter))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(szCharacters); n++)
+		{
+			bool is_selected = (szPlayer1ModifierCharacter == szCharacters[n]);
+			if (ImGui::Selectable(szCharacters[n], is_selected))
+				sprintf(szPlayer1ModifierCharacter, szCharacters[n]);
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+
+		}
+		ImGui::EndCombo();
+	}
+	ImGui::Separator();
+	ImGui::Checkbox("Enable Player 2 Modifier", &m_bPlayer2Modifier);
+
+	if (ImGui::BeginCombo("Player 2 Character", szPlayer2ModifierCharacter))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(szCharacters); n++)
+		{
+			bool is_selected = (szPlayer2ModifierCharacter == szCharacters[n]);
+			if (ImGui::Selectable(szCharacters[n], is_selected))
+				sprintf(szPlayer2ModifierCharacter, szCharacters[n]);
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+
+}
+
+void DCFMenu::DrawStageTab()
+{
+	ImGui::Checkbox("Enable Stage Modifier", &m_bStageModifier);
+
+	if (ImGui::BeginCombo("Stage", szStageModifierStage))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(szStageNames); n++)
+		{
+			bool is_selected = (szStageModifierStage == szStageNames[n]);
+			if (ImGui::Selectable(szStageNames[n], is_selected))
+				sprintf(szStageModifierStage, szStageNames[n]);
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+
+		}
+		ImGui::EndCombo();
+	}
+
+	if (ImGui::Button("Reset Stage Objects"))
+		ResetStageInteractables();
+}
+
+void DCFMenu::DrawCameraTab()
+{
+	ImGui::Checkbox("Set Camera Position", &m_bCustomCameraPos);
+	ImGui::InputFloat3("X | Y | Z", &camPos.X);
+	ImGui::Checkbox("Set Camera Rotation", &m_bCustomCameraRot);
+	ImGui::InputInt3("Pitch | Yaw | Roll", &camRot.Pitch);
+	ImGui::Checkbox("Set FOV", &m_bCustomCameraFOV);
+	ImGui::InputFloat("FOV", &camFov);
+	ImGui::Separator();
+	ImGui::Checkbox("Enable Freecam", &m_bFreeCam);
+	ImGui::SameLine(); ShowHelpMarker("Allows to move camera with certain keys.\nRequires all toggles enabled!\nYou can configure keys in .ini file.");
+
+	if (m_bFreeCam)
+	{
+		if (!m_bCustomCameraPos || !m_bCustomCameraRot || !m_bCustomCameraFOV)
+			ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f), "Check rest of the Set Camera options!");
+
+		ImGui::InputFloat("Freecam Speed", &m_fFreeCameraSpeed);
+		ImGui::InputInt("Freecam Rotation Speed", &m_nFreeCameraRotationSpeed);
+	}
+
+}
+
+void DCFMenu::DrawCheatsTab()
+{
+	ImGui::Separator();
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 11.5f * ImGui::GetFontSize());
+
+	ImGui::Text("Infinite Health");
+	ImGui::NextColumn();
+	ImGui::Checkbox("P1##infhealth", &m_bInfiniteHealthP1);
+	ImGui::SameLine();
+	ImGui::Checkbox("P2##infhealth", &m_bInfiniteHealthP2);
+	ImGui::NextColumn();
+
+
+	ImGui::Text("Zero Health\n");
+	ImGui::NextColumn();
+	ImGui::Checkbox("P1##0health", &m_bNoHealthP1);
+	ImGui::SameLine();
+	ImGui::Checkbox("P2##0health", &m_bNoHealthP2);
+	ImGui::NextColumn();
+
+	ImGui::Text("Infinite Meter\n");
+	ImGui::NextColumn();
+	ImGui::Checkbox("P1##super", &m_bInfiniteMeterP1);
+	ImGui::SameLine();
+	ImGui::Checkbox("P2##super", &m_bInfiniteMeterP2);
+	ImGui::NextColumn();
+
+	ImGui::Text("Zero Meter\n");
+	ImGui::NextColumn();
+	ImGui::Checkbox("P1##0super", &m_bZeroMeterP1);
+	ImGui::SameLine();
+	ImGui::Checkbox("P2##0super", &m_bZeroMeterP2);
+	ImGui::NextColumn();
+
+	ImGui::Separator();
+	ImGui::Columns(1);
+}
+
+void DCFMenu::DrawScriptTab()
+{
+	ImGui::RadioButton("On Player1", &m_nScriptExecuteType, SCRIPT_P1); ImGui::SameLine();
+	ImGui::RadioButton("On Player2", &m_nScriptExecuteType, SCRIPT_P2);
+
+	static char szScriptSource[256] = {};
+	ImGui::InputText("Script Source", szScriptSource, sizeof(szScriptSource));
+	ImGui::Separator();
+
+	if (!(GetObj(PLAYER1) && GetObj(PLAYER2)))
+		return;
+	m_pScript = GetScript(szScriptSource);
+	if (m_pScript)
+	{
+		static int functionIndex = 0;
+		static char szFunction[256] = {};
+
+		static int hash = 0;
+		ImGui::TextWrapped("Functions with params are not supported!");
+
+		ImGui::InputText("Function Name", szFunction, sizeof(szFunction));
+		ImGui::InputInt("Function Index", &functionIndex, 1, 100, ImGuiInputTextFlags_ReadOnly);
+		ImGui::SameLine(); ShowHelpMarker("Read only.");
+
+		static eScriptKeyBind bind;
+		if (ImGui::Button("Add Hotkey"))
+		{
+			m_nHash = szFunction;
+			functionIndex = m_pScript->GetFunctionID(m_nHash);
+
+			sprintf(bind.functionHash,m_nHash);
+			sprintf(bind.scriptName, "%s", szScriptSource);
+			bind.type = (eScriptExecuteType)m_nScriptExecuteType;
+
+			m_bPressingKey = true;
+		}
+
+		if (m_bPressingKey)
+		{
+			ImGui::TextColored(ImVec4(0.f, 1.f, 0.3f, 1.f), "Press a key!");
+			eVKKeyCode result = eKeyboardMan::GetLastKey();
+			if (result >= VK_BACKSPACE && result < VK_KEY_NONE)
+			{
+				bind.key = result;
+				m_vKeyBinds.push_back(bind);
+				m_bPressingKey = false;
+			}
+
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Run"))
+		{
+			m_nHash = szFunction;
+			RunLastScript();
+		}
+
+	}
+	else
+	{
+		if (strlen(szScriptSource) > 0)
+			ImGui::TextWrapped("%s not available!", szScriptSource);
+	}
+
+
+	ImGui::Separator();
+	ImGui::TextWrapped("Registered hotkeys:");
+	for (unsigned int i = 0; i < m_vKeyBinds.size(); i++)
+	{
+		ImGui::TextWrapped("%s - Run [0x%X] from %s", eKeyboardMan::KeyToString(m_vKeyBinds[i].key), m_vKeyBinds[i].functionHash, m_vKeyBinds[i].scriptName);
+	}
+
+	if (ImGui::Button("Clear All"))
+		m_vKeyBinds.clear();
 }
 
 void DCFMenu::DrawSettings()
@@ -361,12 +477,14 @@ void DCFMenu::DrawSettings()
 	static int settingID = 0;
 	static const char* settingNames[] = {
 		"Menu",
-		"INI"
+		"INI",
+		"Keys"
 	};
 
 	enum eSettings {
 		MENU,
 		INI,
+		KEYS,
 	};
 
 	ImGui::BeginChild("##settings", { 12 * ImGui::GetFontSize(), 0 }, true);
@@ -399,6 +517,60 @@ void DCFMenu::DrawSettings()
 		ImGui::Checkbox("Debug Console", &SettingsMgr->bEnableConsoleWindow);
 
 		break;
+	case KEYS:
+		if (m_bPressingKey)
+			ImGui::TextColored(ImVec4(0.f, 1.f, 0.3f, 1.f), "Press a key!");
+
+		if (ImGui::Button("Reset Keys", { -FLT_MIN, 0 }))
+		{
+			SettingsMgr->ResetKeys();
+			Notifications->SetNotificationTime(2500);
+			Notifications->PushNotification("Keys reset! Remember to save.");
+		}
+		ImGui::Separator();
+		ImGui::LabelText("", "Core");
+		ImGui::Separator();
+		KeyBind(&SettingsMgr->iHookMenuOpenKey, "Open/Close Menu", "menu");
+		ImGui::Separator();
+		ImGui::LabelText("", "Camera");
+		ImGui::Separator();
+
+		KeyBind(&SettingsMgr->iFreeCameraKeyFOVPlus, "FOV+", "fov_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyFOVMinus, "FOV-", "fov_minus");
+
+		KeyBind(&SettingsMgr->iFreeCameraKeyYawPlus, "Yaw+", "ya_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyYawMinus, "Yaw-", "ya_minus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyPitchPlus, "Pitch+", "pi_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyPitchMinus, "Pitch-", "pi_minus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyRollPlus, "Roll+", "r_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyRollMinus, "Roll-", "r_minus");
+
+		KeyBind(&SettingsMgr->iFreeCameraKeyXPlus, "X+", "x_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyXMinus, "X-", "x_minus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyYPlus, "Y+", "y_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyYMinus, "Y-", "y_minus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyZPlus, "Z+", "z_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyZMinus, "Z-", "z_minus");
+
+
+		ImGui::Separator();
+		ImGui::LabelText("", "Misc");
+		ImGui::Separator();
+		KeyBind(&SettingsMgr->iResetStageInteractablesKey, "Reset Stage Objects", "r_stage");
+		ImGui::Separator();
+
+		if (m_bPressingKey)
+		{
+			eVKKeyCode result = eKeyboardMan::GetLastKey();
+
+			if (result >= VK_BACKSPACE && result < VK_KEY_NONE)
+			{
+				*m_pCurrentVarToChange = result;
+				m_bPressingKey = false;
+			}
+
+		}
+		break;
 	default:
 		break;
 	}
@@ -414,6 +586,79 @@ void DCFMenu::DrawSettings()
 	ImGui::EndChild();
 
 	ImGui::End();
+}
+
+void DCFMenu::DrawKeyBind(char* name, int* var)
+{
+	ImGui::SameLine();
+
+	static char butName[256] = {};
+	sprintf(butName, "%s##key%s", eKeyboardMan::KeyToString(*var), name);
+	if (ImGui::Button(butName))
+	{
+		m_bPressingKey = true;
+		m_pCurrentVarToChange = var;
+	}
+}
+
+void DCFMenu::KeyBind(int* var, char* bindName, char* name)
+{
+	ImGui::LabelText("", bindName);
+	DrawKeyBind(name, var);
+}
+
+void DCFMenu::RunLastScript()
+{
+	if (int id = m_pScript->GetFunctionID(m_nHash))
+	{
+		switch (m_nScriptExecuteType)
+		{
+		case SCRIPT_P1:
+			GetObj(PLAYER1)->ExecuteScript(m_pScript, id);
+			break;
+		case SCRIPT_P2:
+			GetObj(PLAYER2)->ExecuteScript(m_pScript, id);
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		Notifications->SetNotificationTime(3500);
+		Notifications->PushNotification("Function %s does not exist!", m_nHash);
+	}
+}
+
+void DCFMenu::ProcessScriptHotkeys()
+{
+	for (int i = 0; i < m_vKeyBinds.size(); i++)
+	{
+		if (GetAsyncKeyState(m_vKeyBinds[i].key) & 0x1)
+		{
+
+			MKScript* script = GetScript(m_vKeyBinds[i].scriptName);
+			if (int id = script->GetFunctionID(m_vKeyBinds[i].functionHash))
+			{
+				switch (m_vKeyBinds[i].type)
+				{
+				case SCRIPT_P1:
+					GetObj(PLAYER1)->ExecuteScript(script, id);
+					break;
+				case SCRIPT_P2:
+					GetObj(PLAYER2)->ExecuteScript(script, id);
+					break;
+				default:
+					break;
+				}
+			}
+			else
+			{
+				Notifications->SetNotificationTime(3500);
+				Notifications->PushNotification("Function %x does not exist!", m_vKeyBinds[i].functionHash);
+			}
+		}
+	}
 }
 
 bool DCFMenu::GetActiveState()

@@ -10,6 +10,7 @@
 #include "code/mk10utils.h"
 #include "code/GameInfo.h"
 #include "eDirectX9Hook.h"
+#include "code/helper/eGamepadManager.h"
 #include <iostream>
 
 using namespace Memory::VP;
@@ -47,6 +48,9 @@ void OnInitializeHook()
 
 	InjectHook(_addr(0x7BAC62), &MKCamera::HookedSetPosition);
 	InjectHook(_addr(0x7BAC6D), &MKCamera::HookedSetRotation);
+
+	if (SettingsMgr->bEnableGamepadSupport)
+		InjectHook(_addr(0xF7548E), XInputGetState_Hook, PATCH_JUMP);
 }
 
 bool CheckGame()

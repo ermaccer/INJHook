@@ -2,7 +2,7 @@
 #include "MKCharacter.h"
 #define GFG_GAME_INFO  0x33FC6F4 
 
-#define INJHOOK_VERSION "0.1"
+#define INJHOOK_VERSION "0.2"
 
 enum  PLAYER_NUM
 {

@@ -1,4 +1,8 @@
 #include "dcf.h"
+#include "helper/eKeyboardMan.h"
+#include "GameInfo.h"
+#include <vector>
+
 enum eCustomCameras {
 	CAMERA_3RDPERSON,
 	TOTAL_CUSTOM_CAMERAS
@@ -7,6 +11,19 @@ enum eCustomCameras {
 enum eMenuSubMenus {
 	SUBMENU_SETTINGS,
 	TOTAL_SUBMENUS
+};
+
+enum eScriptExecuteType {
+	SCRIPT_P1,
+	SCRIPT_P2,
+	SCRIPT_GLOBAL
+};
+
+struct eScriptKeyBind {
+	eScriptExecuteType type;
+	eVKKeyCode key;
+	char scriptName[128] = {};
+	char functionHash[128] = {};
 };
 
 // as usual, based on mh2 debug menu
@@ -42,6 +59,13 @@ public:
 	int		 m_nFreeCameraRotationSpeed = 20;
 	float	 m_fFreeCameraSpeed = 1.0f;
 
+
+	int* m_pCurrentVarToChange = nullptr;
+
+	int  m_nScriptExecuteType = 0;
+	char* m_nHash = 0;
+	MKScript* m_pScript;
+
 	char szPlayer1ModifierCharacter[128] = {};
 	char szPlayer2ModifierCharacter[128] = {};
 	char szStageModifierStage[128] = {};
@@ -50,12 +74,27 @@ public:
 	FRotator camRot;
 	float camFov;
 
+	std::vector<eScriptKeyBind> m_vKeyBinds;
+
 	void Initialize();
 	void Process();
 	void Draw();
 	void UpdateControls();
 
+	void DrawCharacterTab();
+	void DrawStageTab();
+	void DrawCameraTab();
+	void DrawCheatsTab();
+	void DrawScriptTab();
+
 	void DrawSettings();
+
+	void DrawKeyBind(char* name, int* var);
+	void KeyBind(int* var, char* bindName, char* name);
+
+	void RunLastScript();
+
+	void ProcessScriptHotkeys();
 
 	bool GetActiveState();
 };

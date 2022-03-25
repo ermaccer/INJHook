@@ -88,7 +88,7 @@ void eSettingsManager::Init()
 
 void eSettingsManager::SaveSettings()
 {
-	CIniReader user("mk11hook_user.ini");
+	CIniReader user("injhook_user.ini");
 	user.WriteFloat("MenuSettings", "fMenuScale", fMenuScale);
 
 	user.WriteInteger("Settings", "iHookMenuOpenKey", iHookMenuOpenKey);

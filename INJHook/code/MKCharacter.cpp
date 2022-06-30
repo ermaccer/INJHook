@@ -1,7 +1,7 @@
 #include "MKCharacter.h"
 #include "mk10utils.h"
 #include <iostream>
-#include <Windows.h>
+
 void MKCharacter::SetLife(float life)
 {
 	((void(__thiscall*)(MKCharacter*, float))_addr(0xD29C00))(this, life);

@@ -5,6 +5,8 @@
 #include "eSettingsManager.h"
 #include <Windows.h>
 #include "..\eDirectX9Hook.h"
+#include "helper\eMouse.h"
+#include "mkcamera.h"
 
 const char* szCharacters[] = {
 	"NPC_AA_Inmates",
@@ -214,18 +216,32 @@ void DCFMenu::UpdateControls()
 {
 	if (TheMenu->m_bFreeCam)
 	{
+		FVector fwd = TheCamera->GetMatrix().GetForward();
+		FVector strafe = TheCamera->GetMatrix().GetRight();
+		FVector up = TheCamera->GetMatrix().GetUp();
+
+		// forward
+
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyXPlus))
-			TheMenu->camPos.X += TheMenu->m_fFreeCameraSpeed;
+			TheMenu->camPos += fwd * TheMenu->m_fFreeCameraSpeed * 1;
+
+
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyXMinus))
-			TheMenu->camPos.X -= TheMenu->m_fFreeCameraSpeed;
+			TheMenu->camPos += fwd * TheMenu->m_fFreeCameraSpeed * -1;
+
+		// strafe
+
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyYPlus))
-			TheMenu->camPos.Y += TheMenu->m_fFreeCameraSpeed;
+			TheMenu->camPos += strafe * TheMenu->m_fFreeCameraSpeed * 1;
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyYMinus))
-			TheMenu->camPos.Y -= TheMenu->m_fFreeCameraSpeed;
+			TheMenu->camPos += strafe * TheMenu->m_fFreeCameraSpeed * -1;
+
+		// up
+
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyZPlus))
-			TheMenu->camPos.Z += TheMenu->m_fFreeCameraSpeed;
+			TheMenu->camPos += up * TheMenu->m_fFreeCameraSpeed * 1;
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyZMinus))
-			TheMenu->camPos.Z -= TheMenu->m_fFreeCameraSpeed;
+			TheMenu->camPos += up * TheMenu->m_fFreeCameraSpeed * -1;
 
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyYawMinus))
 			TheMenu->camRot.Yaw -= TheMenu->m_nFreeCameraRotationSpeed;
@@ -241,6 +257,15 @@ void DCFMenu::UpdateControls()
 			TheMenu->camRot.Pitch -= TheMenu->m_nFreeCameraRotationSpeed;
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyPitchPlus))
 			TheMenu->camRot.Pitch += TheMenu->m_nFreeCameraRotationSpeed;
+
+		// mouse
+		{
+			if (!TheMenu->m_bIsActive && TheMenu->m_bMouseControl)
+			{
+				TheMenu->camRot.Pitch += eMouse::GetDeltaY();
+				TheMenu->camRot.Yaw += eMouse::GetDeltaX();
+			}
+		}
 
 		if (GetAsyncKeyState(SettingsMgr->iFreeCameraKeyFOVMinus))
 		{
@@ -350,6 +375,7 @@ void DCFMenu::DrawCameraTab()
 
 		ImGui::InputFloat("Freecam Speed", &m_fFreeCameraSpeed);
 		ImGui::InputInt("Freecam Rotation Speed", &m_nFreeCameraRotationSpeed);
+		ImGui::Checkbox("Mouse Control", &m_bMouseControl);
 	}
 
 }
@@ -478,14 +504,17 @@ void DCFMenu::DrawSettings()
 	static const char* settingNames[] = {
 		"Menu",
 		"INI",
-		"Keys"
+		"Keys",
+		"Mouse"
 	};
 
 	enum eSettings {
 		MENU,
 		INI,
 		KEYS,
+		MOUSE
 	};
+
 
 	ImGui::BeginChild("##settings", { 12 * ImGui::GetFontSize(), 0 }, true);
 
@@ -508,7 +537,9 @@ void DCFMenu::DrawSettings()
 	case MENU:
 		ImGui::TextWrapped("All user settings are saved to INJHook_user.ini.");
 		ImGui::Text("Menu Scale");
+		ImGui::PushItemWidth(-FLT_MIN);
 		ImGui::InputFloat("", &SettingsMgr->fMenuScale);
+		ImGui::PopItemWidth();
 		break;
 	case INI:
 		ImGui::TextWrapped("These settings control INJHook.ini options. Any changes require game restart to take effect.");
@@ -545,12 +576,12 @@ void DCFMenu::DrawSettings()
 		KeyBind(&SettingsMgr->iFreeCameraKeyRollPlus, "Roll+", "r_plus");
 		KeyBind(&SettingsMgr->iFreeCameraKeyRollMinus, "Roll-", "r_minus");
 
-		KeyBind(&SettingsMgr->iFreeCameraKeyXPlus, "X+", "x_plus");
-		KeyBind(&SettingsMgr->iFreeCameraKeyXMinus, "X-", "x_minus");
-		KeyBind(&SettingsMgr->iFreeCameraKeyYPlus, "Y+", "y_plus");
-		KeyBind(&SettingsMgr->iFreeCameraKeyYMinus, "Y-", "y_minus");
-		KeyBind(&SettingsMgr->iFreeCameraKeyZPlus, "Z+", "z_plus");
-		KeyBind(&SettingsMgr->iFreeCameraKeyZMinus, "Z-", "z_minus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyXPlus, "Forward", "x_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyXMinus, "Back", "x_minus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyYPlus, "Left", "y_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyYMinus, "Right", "y_minus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyZPlus, "Up", "z_plus");
+		KeyBind(&SettingsMgr->iFreeCameraKeyZMinus, "Down", "z_minus");
 
 
 		ImGui::Separator();
@@ -570,6 +601,15 @@ void DCFMenu::DrawSettings()
 			}
 
 		}
+		break;
+	case MOUSE:
+		ImGui::TextWrapped("All user settings are saved to INJHook_user.ini.");
+		ImGui::Text("Sensitivity");
+		ImGui::PushItemWidth(-FLT_MIN);
+		ImGui::SliderInt("", &SettingsMgr->mouse.sens, 1, 50);
+		ImGui::PopItemWidth();
+		ImGui::Checkbox("Invert X", &SettingsMgr->mouse.invert_x);
+		ImGui::Checkbox("Invert Y", &SettingsMgr->mouse.invert_y);
 		break;
 	default:
 		break;

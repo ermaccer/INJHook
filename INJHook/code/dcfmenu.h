@@ -43,6 +43,8 @@ public:
 	bool	 m_bCustomCameras = false;
 	bool	 m_bYObtained = false;
 	bool	 m_bStageModifier = false;
+	bool	 m_bMouseControl = false;
+
 	// cheats
 	bool	m_bInfiniteHealthP1 = false;
 	bool	m_bInfiniteHealthP2 = false;

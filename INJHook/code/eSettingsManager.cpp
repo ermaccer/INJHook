@@ -11,6 +11,8 @@ void eSettingsManager::Init()
 
 	// user first
 	iHookMenuOpenKey = user.ReadInteger("Settings", "iHookMenuOpenKey", 0xFF);
+	bEnableConsoleWindow = ini.ReadBoolean("Settings", "bEnableConsoleWindow", true);
+	bEnableGamepadSupport = ini.ReadBoolean("Settings", "bEnableGamepadSupport", true);
 
 	if (iHookMenuOpenKey == 0xFF)
 		iHookMenuOpenKey = ini.ReadInteger("Settings", "iHookMenuOpenKey", VK_F1);
@@ -82,8 +84,9 @@ void eSettingsManager::Init()
 	if (fMenuScale < 1.0f)
 		fMenuScale = 1.0f;
 
-	bEnableConsoleWindow = ini.ReadBoolean("Settings", "bEnableConsoleWindow", true);
-	bEnableGamepadSupport = ini.ReadBoolean("Settings", "bEnableGamepadSupport", true);
+	mouse.sens = user.ReadInteger("Mouse", "Sensitivity", 10);
+	mouse.invert_y = user.ReadBoolean("Mouse", "InvertY", false);
+	mouse.invert_x = user.ReadBoolean("Mouse", "InvertX", false);
 }
 
 void eSettingsManager::SaveSettings()
@@ -106,6 +109,9 @@ void eSettingsManager::SaveSettings()
 	user.WriteInteger("Settings", "iFreeCameraKeyFOVPlus", iFreeCameraKeyFOVPlus);
 	user.WriteInteger("Settings", "iFreeCameraKeyFOVMinus", iFreeCameraKeyFOVMinus);
 	user.WriteInteger("Settings", "iResetStageInteractablesKey", iResetStageInteractablesKey);
+	user.WriteInteger("Mouse", "Sensitivity", mouse.sens);
+	user.WriteBoolean("Mouse", "InvertY", mouse.invert_y);
+	user.WriteBoolean("Mouse", "InvertX", mouse.invert_x);
 
 	CIniReader ini("");
 	ini.WriteBoolean("Settings", "bEnableGamepadSupport", bEnableGamepadSupport);

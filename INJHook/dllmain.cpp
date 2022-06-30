@@ -11,7 +11,7 @@
 #include "code/GameInfo.h"
 #include "eDirectX9Hook.h"
 #include "code/helper/eGamepadManager.h"
-#include <iostream>
+#include "code/helper/eMouse.h"
 
 using namespace Memory::VP;
 
@@ -21,6 +21,7 @@ void WINAPI HookUpdate()
 	while (true)
 	{
 		INJHooks::HookProcessStuff();
+		eMouse::UpdateMouse();
 		Sleep(1);
 	}
 }
@@ -44,7 +45,6 @@ void OnInitializeHook()
 	InjectHook(_addr(0xE56625), &FGGameInfo::SetStageAndCharactersHooked);
 
 	Nop(_addr(0x7BAC3C), 24);
-	//Nop(_addr(0x7BAC31), 8);
 
 	InjectHook(_addr(0x7BAC62), &MKCamera::HookedSetPosition);
 	InjectHook(_addr(0x7BAC6D), &MKCamera::HookedSetRotation);
@@ -68,6 +68,7 @@ bool CheckGame()
 		return false;
 	}
 }
+
 
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 {

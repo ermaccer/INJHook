@@ -28,6 +28,9 @@
     <Filter Include="Header Files\code\helper">
       <UniqueIdentifier>{b1a77bcf-0cd7-4ebf-b709-b12e6cdf702f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\code\unreal">
+      <UniqueIdentifier>{fb93c772-6cc5-440c-8ec8-ba1fb25fd566}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -126,6 +129,30 @@
     <ClInclude Include="code\helper\eGamepadManager.h">
       <Filter>Header Files\code\helper</Filter>
     </ClInclude>
+    <ClInclude Include="code\helper\eMath.h">
+      <Filter>Header Files\code\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="code\unreal\FMath.h">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="code\unreal\FMatrix.h">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="code\unreal\FName.h">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="code\unreal\FQuat.h">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="code\unreal\FRotator.h">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="code\unreal\FVector.h">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="code\helper\eMouse.h">
+      <Filter>Header Files\code\helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -207,6 +234,21 @@
       <Filter>Header Files\code\helper</Filter>
     </ClCompile>
     <ClCompile Include="code\helper\eGamepadManager.cpp">
+      <Filter>Header Files\code\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="code\helper\eMath.cpp">
+      <Filter>Header Files\code\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="code\unreal\FMath.cpp">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="code\unreal\FMatrix.cpp">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="code\unreal\FName.cpp">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="code\helper\eMouse.cpp">
       <Filter>Header Files\code\helper</Filter>
     </ClCompile>
   </ItemGroup>

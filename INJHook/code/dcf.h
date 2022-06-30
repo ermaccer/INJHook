@@ -1,8 +1,11 @@
 #pragma once
 #include "MKCharacter.h"
+#include "unreal/FVector.h"
+#include "unreal/FRotator.h"
+
 #define GFG_GAME_INFO  0x33FC6F4 
 
-#define INJHOOK_VERSION "0.2"
+#define INJHOOK_VERSION "0.3"
 
 enum  PLAYER_NUM
 {
@@ -15,20 +18,6 @@ enum  PLAYER_NUM
 	CPU_PLAYER,
 	NOT_CPU_PLAYER,
 	BACKGROUND_PLAYER
-};
-
-struct FVector
-{
-	float X;
-	float Y;
-	float Z;
-};
-
-
-struct FRotator {
-	int Pitch;
-	int Yaw;
-	int Roll;
 };
 
 

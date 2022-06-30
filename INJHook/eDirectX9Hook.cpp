@@ -48,7 +48,7 @@ void eDirectX9Hook::InitImGui(LPDIRECT3DDEVICE9 pDevice)
 	ImGui::CreateContext();
 	ImGui::GetIO().ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	ImGui_ImplWin32_Init(ms_hWindow);
 	ImGui_ImplDX9_Init(pDevice);
 	if (SettingsMgr->bEnableGamepadSupport)

@@ -3,14 +3,18 @@
 #include "dcfmenu.h"
 #include <iostream>
 
+MKCamera* TheCamera;
+
 void MKCamera::SetPosition(FVector * pos)
 {
+	TheCamera = this;
 	camPos = *pos;
 	((void(__thiscall*)(MKCamera*, FVector*))_addr(0x8C1770))(this, pos);
 }
 
 void MKCamera::SetRotation(FRotator * rot)
 {
+	TheCamera = this;
 	camRot = *rot;
 	((void(__thiscall*)(MKCamera*, FRotator*))_addr(0x8C17A0))(this, rot);
 }
@@ -51,5 +55,12 @@ void MKCamera::HookedSetRotation(FRotator * rot)
 	}
 	else
 		SetRotation(&TheMenu->camRot);
+}
+
+FMatrix MKCamera::GetMatrix()
+{
+	FRotator rot = camRot;
+	FMatrix mat(&rot);
+	return mat;
 }
 

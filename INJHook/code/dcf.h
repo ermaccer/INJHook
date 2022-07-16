@@ -5,7 +5,7 @@
 
 #define GFG_GAME_INFO  0x33FC6F4 
 
-#define INJHOOK_VERSION "0.3"
+#define INJHOOK_VERSION "0.3.1"
 
 enum  PLAYER_NUM
 {

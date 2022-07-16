@@ -28,6 +28,9 @@ MKCharacter*	  GetObj(PLAYER_NUM plr);
 void 				ResetStageInteractables();
 void  SetCharacterMeter(int obj, float meter);
 
+void  SetCharacterScale(PLAYER_NUM plr, FVector* scale);
+void  SetCharacterSpeed(PLAYER_NUM plr, float speed);
+
 
 namespace INJHooks {
 	void  HookProcessStuff();

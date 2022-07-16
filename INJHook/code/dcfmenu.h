@@ -54,13 +54,15 @@ public:
 	bool	m_bNoHealthP2 = false;
 	bool	m_bZeroMeterP1 = false;
 	bool	m_bZeroMeterP2 = false;
-
+	bool	m_bChangePlayerSpeed = false;
+	bool	m_bChangePlayerScale = false;
 	bool	m_bPlayer1Modifier = false;
 	bool	m_bPlayer2Modifier = false;
 
 	int		 m_nFreeCameraRotationSpeed = 20;
 	float	 m_fFreeCameraSpeed = 1.0f;
-
+	float	 m_fP1Speed = 1.0f;
+	float	 m_fP2Speed = 1.0f;
 
 	int* m_pCurrentVarToChange = nullptr;
 
@@ -71,6 +73,9 @@ public:
 	char szPlayer1ModifierCharacter[128] = {};
 	char szPlayer2ModifierCharacter[128] = {};
 	char szStageModifierStage[128] = {};
+
+	FVector	 m_vP1Scale = { 1.0f, 1.0f, 1.0f };
+	FVector	 m_vP2Scale = { 1.0f, 1.0f, 1.0f };
 
 	FVector camPos;
 	FRotator camRot;
@@ -85,10 +90,11 @@ public:
 
 	void DrawCharacterTab();
 	void DrawStageTab();
+	void DrawPlayerTab();
 	void DrawCameraTab();
 	void DrawCheatsTab();
 	void DrawScriptTab();
-
+	void DrawMiscTab();
 	void DrawSettings();
 
 	void DrawKeyBind(char* name, int* var);

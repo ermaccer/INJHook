@@ -28,6 +28,20 @@ void SetCharacterMeter(int obj, float meter)
 	((void(__thiscall*)(int, float))_addr(0xDBE230))(obj, meter);
 }
 
+void SetCharacterScale(PLAYER_NUM plr, FVector* scale)
+{
+	int obj = (int)GetObj(plr);
+	int actor = *(int*)(obj + 16);
+	*(FVector*)(actor + 0x114) = *scale;
+}
+
+void SetCharacterSpeed(PLAYER_NUM plr, float speed)
+{
+	int obj = (int)GetObj(plr);
+	int actor = *(int*)(obj + 16);
+	*(float*)(actor + 0x8C) = speed;
+}
+
 void SetCharacter(PLAYER_NUM plr, int unk, char * name)
 {
 	((void(__cdecl*)(PLAYER_NUM, int, char*))0x8141A0)(plr, unk, name);
@@ -86,6 +100,22 @@ void INJHooks::HookProcessStuff()
 		if (GetObj(PLAYER2))
 			GetObj(PLAYER2)->SetLife(0.0);
 	}
+
+	if (TheMenu->m_bChangePlayerScale)
+	{
+		if (GetObj(PLAYER1))
+			SetCharacterScale(PLAYER1, &TheMenu->m_vP1Scale);
+		if (GetObj(PLAYER2))
+			SetCharacterScale(PLAYER2, &TheMenu->m_vP2Scale);
+	}
+	if (TheMenu->m_bChangePlayerSpeed)
+	{
+		if (GetObj(PLAYER1))
+			SetCharacterSpeed(PLAYER1, TheMenu->m_fP1Speed);
+		if (GetObj(PLAYER2))
+			SetCharacterSpeed(PLAYER2, TheMenu->m_fP2Speed);
+	}
+
 }
 
 void INJHooks::SetupFight()

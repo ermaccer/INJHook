@@ -187,6 +187,11 @@ void DCFMenu::Draw()
 			DrawStageTab();
 			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("Player Control"))
+		{
+			DrawPlayerTab();
+			ImGui::EndTabItem();
+		}
 		if (ImGui::BeginTabItem("Camera Control"))
 		{
 			DrawCameraTab();
@@ -204,6 +209,11 @@ void DCFMenu::Draw()
 			DrawScriptTab();
 			ImGui::EndTabItem();
 		}
+		///if (ImGui::BeginTabItem("Misc."))
+		///{
+		///	DrawMiscTab();
+		///	ImGui::EndTabItem();
+		///}
 	}
 	ImGui::End();
 
@@ -356,6 +366,41 @@ void DCFMenu::DrawStageTab()
 		ResetStageInteractables();
 }
 
+void DCFMenu::DrawPlayerTab()
+{
+	if (GetObj(PLAYER1) && GetObj(PLAYER2))
+	{
+		ImGui::Checkbox("Change Player Speed", &m_bChangePlayerSpeed);
+		ImGui::SliderFloat("Player 1", &m_fP1Speed, 0.0, 10.0f);
+		ImGui::SliderFloat("Player 2", &m_fP2Speed, 0.0, 10.0f);
+		if (ImGui::Button("Reset Speed"))
+		{
+			m_fP1Speed = 1.0f;
+			m_fP2Speed = 1.0f;
+			if (GetObj(PLAYER1))
+				SetCharacterSpeed(PLAYER1, m_fP1Speed);
+			if (GetObj(PLAYER2))
+				SetCharacterSpeed(PLAYER2, m_fP2Speed);
+		}
+
+		ImGui::Checkbox("Change Player Scale", &m_bChangePlayerScale);
+		ImGui::InputFloat3("Player 1 ", &m_vP1Scale.X);
+		ImGui::InputFloat3("Player 2 ", &m_vP2Scale.X);
+
+		if (ImGui::Button("Reset Scale"))
+		{
+			m_vP1Scale = { 1.0f,1.0f,1.0f };
+			m_vP2Scale = { 1.0f,1.0f,1.0f };
+			if (GetObj(PLAYER1))
+				SetCharacterScale(PLAYER1, &m_vP1Scale);
+			if (GetObj(PLAYER2))
+				SetCharacterScale(PLAYER2, &m_vP2Scale);
+		}
+	}
+	else
+		ImGui::Text("Player options are only available in-game!");
+}
+
 void DCFMenu::DrawCameraTab()
 {
 	ImGui::Checkbox("Set Camera Position", &m_bCustomCameraPos);
@@ -492,6 +537,14 @@ void DCFMenu::DrawScriptTab()
 
 	if (ImGui::Button("Clear All"))
 		m_vKeyBinds.clear();
+}
+
+void DCFMenu::DrawMiscTab()
+{
+	if (ImGui::Button("Print Pointers"))
+	{
+		printf("P1 OBJ: 0x%X INFO: 0x%X GAMEINFO: 0x%X\n", GetObj(PLAYER1), GetInfo(PLAYER1), GetGameInfo());
+	}
 }
 
 void DCFMenu::DrawSettings()

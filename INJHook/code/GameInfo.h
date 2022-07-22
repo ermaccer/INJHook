@@ -13,6 +13,8 @@ public:
 	MKScript* GetFightScript();
 	MKScript* GetGenericScript();
 	void ResetStageInteractables();
+
+	void SetGameSpeed(float value);
 };
 
 FGGameInfo* GetGameInfo();

@@ -17,6 +17,11 @@ void eSettingsManager::Init()
 	if (iHookMenuOpenKey == 0xFF)
 		iHookMenuOpenKey = ini.ReadInteger("Settings", "iHookMenuOpenKey", VK_F1);
 
+
+	iToggleSlowMoKey = user.ReadInteger("Settings", "iToggleSlowMoKey", 0xFF);
+	if (iToggleSlowMoKey == 0xFF)
+		iToggleSlowMoKey = VK_F5;
+
 	iResetStageInteractablesKey = user.ReadInteger("Settings", "iResetStageInteractablesKey", 0xFF);
 	if (iResetStageInteractablesKey == 0xFF)
 		iResetStageInteractablesKey = 0xFF;
@@ -95,6 +100,7 @@ void eSettingsManager::SaveSettings()
 	user.WriteFloat("MenuSettings", "fMenuScale", fMenuScale);
 
 	user.WriteInteger("Settings", "iHookMenuOpenKey", iHookMenuOpenKey);
+	user.WriteInteger("Settings", "iToggleSlowMoKey", iToggleSlowMoKey);
 	user.WriteInteger("Settings", "iFreeCameraKeyXMinus", iFreeCameraKeyXMinus);
 	user.WriteInteger("Settings", "iFreeCameraKeyYPlus", iFreeCameraKeyYPlus);
 	user.WriteInteger("Settings", "iFreeCameraKeyYMinus", iFreeCameraKeyYMinus);
@@ -121,6 +127,7 @@ void eSettingsManager::SaveSettings()
 void eSettingsManager::ResetKeys()
 {
 	iHookMenuOpenKey = VK_F1;
+	iToggleSlowMoKey = VK_F5;
 	iResetStageInteractablesKey = 255;
 	iFreeCameraKeyXPlus = 104;
 	iFreeCameraKeyXMinus = 98;

@@ -6,6 +6,8 @@ class FMatrix {
 public:
 	float M[4][4] = {};
 
+	void Rotator(FRotator* dest);
+
 	FMatrix();
 	FMatrix(FRotator*);
 

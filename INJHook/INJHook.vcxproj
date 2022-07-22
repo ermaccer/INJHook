@@ -175,6 +175,7 @@
     <ClInclude Include="code\unreal\FQuat.h" />
     <ClInclude Include="code\unreal\FRotator.h" />
     <ClInclude Include="code\unreal\FVector.h" />
+    <ClInclude Include="code\unreal\SkeletalMeshComponent.h" />
     <ClInclude Include="eDirectX9Hook.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="framework.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="code\unreal\FMath.cpp" />
     <ClCompile Include="code\unreal\FMatrix.cpp" />
     <ClCompile Include="code\unreal\FName.cpp" />
+    <ClCompile Include="code\unreal\SkeletalMeshComponent.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="eDirectX9Hook.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />

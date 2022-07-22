@@ -4,7 +4,7 @@
 #include <vector>
 
 enum eCustomCameras {
-	CAMERA_3RDPERSON,
+	CAMERA_HEAD_TRACKING,
 	TOTAL_CUSTOM_CAMERAS
 };
 
@@ -43,6 +43,10 @@ public:
 	bool	 m_bCustomCameras = false;
 	bool	 m_bYObtained = false;
 	bool	 m_bStageModifier = false;
+	bool	 m_bDontFlipCamera = false;
+	bool	 m_bUsePlayerTwoAsTracker = false;
+	bool	 m_bStaticHead = true;
+	bool	 m_bDontAdjust = false;
 	bool	 m_bMouseControl = false;
 
 	// cheats
@@ -59,11 +63,17 @@ public:
 	bool	m_bPlayer1Modifier = false;
 	bool	m_bPlayer2Modifier = false;
 
-	int		 m_nFreeCameraRotationSpeed = 20;
-	float	 m_fFreeCameraSpeed = 1.0f;
+	float	 m_fSlowMotionSpeed = 0.5f;
 	float	 m_fP1Speed = 1.0f;
 	float	 m_fP2Speed = 1.0f;
+	float	 m_fAdjustCustomHeadCameraX = 0.0f;
+	float	 m_fAdjustCustomHeadCameraY = -2800.0f;
+	float	 m_fAdjustCustomHeadCameraZ = 0.0f;
+	float	 m_fAdjustCustomHeadCameraY2 = 0.0f;
+	float	 m_fFreeCameraSpeed = 1.0f;
 
+	int		 m_nFreeCameraRotationSpeed = 20;
+	int  m_nCurrentCustomCamera = CAMERA_HEAD_TRACKING;
 	int* m_pCurrentVarToChange = nullptr;
 
 	int  m_nScriptExecuteType = 0;
@@ -73,6 +83,7 @@ public:
 	char szPlayer1ModifierCharacter[128] = {};
 	char szPlayer2ModifierCharacter[128] = {};
 	char szStageModifierStage[128] = {};
+	char szCurrentCameraOption[128] = {};
 
 	FVector	 m_vP1Scale = { 1.0f, 1.0f, 1.0f };
 	FVector	 m_vP2Scale = { 1.0f, 1.0f, 1.0f };
@@ -83,6 +94,9 @@ public:
 
 	std::vector<eScriptKeyBind> m_vKeyBinds;
 
+	FVector plrPos;
+	FVector plrPos2;
+
 	void Initialize();
 	void Process();
 	void Draw();
@@ -91,6 +105,7 @@ public:
 	void DrawCharacterTab();
 	void DrawStageTab();
 	void DrawPlayerTab();
+	void DrawSpeedTab();
 	void DrawCameraTab();
 	void DrawCheatsTab();
 	void DrawScriptTab();

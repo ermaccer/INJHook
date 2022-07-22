@@ -1,5 +1,10 @@
 #include "FMatrix.h"
 #include "FMath.h"
+#include "..\mk10utils.h"
+void FMatrix::Rotator(FRotator* dest)
+{
+	((void(__thiscall*)(FMatrix*, FRotator*))_addr(0x432600))(this, dest);
+}
 
 FMatrix::FMatrix()
 {

@@ -132,6 +132,24 @@ const char* szStageNames[]{
 	"BGND_WayneManorN",
 };
 
+const char* szCameraModes[TOTAL_CUSTOM_CAMERAS] = {
+	"Head Perspective"
+};
+
+int GetCamMode(const char* mode)
+{
+	for (int i = 0; i < TOTAL_CUSTOM_CAMERAS; i++)
+	{
+		if (strcmp(mode, szCameraModes[i]) == 0)
+		{
+			return i;
+			break;
+		}
+	}
+	return -1;
+}
+
+
 DCFMenu* TheMenu = new DCFMenu();
 
 static void ShowHelpMarker(const char* desc)
@@ -153,6 +171,7 @@ void DCFMenu::Initialize()
 	sprintf(szPlayer1ModifierCharacter, szCharacters[0]);
 	sprintf(szPlayer2ModifierCharacter, szCharacters[0]);
 	sprintf(szStageModifierStage, szStageNames[0]);
+	sprintf(szCurrentCameraOption, szCameraModes[0]);
 }
 
 void DCFMenu::Process()
@@ -187,6 +206,11 @@ void DCFMenu::Draw()
 			DrawStageTab();
 			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("Speed Modifier"))
+		{
+			DrawSpeedTab();
+			ImGui::EndTabItem();
+		}
 		if (ImGui::BeginTabItem("Player Control"))
 		{
 			DrawPlayerTab();
@@ -209,11 +233,11 @@ void DCFMenu::Draw()
 			DrawScriptTab();
 			ImGui::EndTabItem();
 		}
-		///if (ImGui::BeginTabItem("Misc."))
-		///{
-		///	DrawMiscTab();
-		///	ImGui::EndTabItem();
-		///}
+		//if (ImGui::BeginTabItem("Misc."))
+		//{
+		//	DrawMiscTab();
+		//	ImGui::EndTabItem();
+		//}
 	}
 	ImGui::End();
 
@@ -396,9 +420,38 @@ void DCFMenu::DrawPlayerTab()
 			if (GetObj(PLAYER2))
 				SetCharacterScale(PLAYER2, &m_vP2Scale);
 		}
+
+		ImGui::Separator();
+		ImGui::Text("Position");
+		ImGui::SameLine(); ShowHelpMarker("Read only!");
+		if (GetObj(PLAYER1))
+		{
+			GetCharacterPosition(PLAYER1, &plrPos);
+			ImGui::InputFloat3("X | Y | Z", &plrPos.X);
+		}
+		if (GetObj(PLAYER2))
+		{
+			GetCharacterPosition(PLAYER2, &plrPos2);
+			ImGui::InputFloat3("X | Y | Z", &plrPos2.X);
+		}
 	}
 	else
 		ImGui::Text("Player options are only available in-game!");
+}
+
+void DCFMenu::DrawSpeedTab()
+{
+	ImGui::Text("Gamespeed Control");
+	ImGui::SameLine(); ShowHelpMarker("Hotkey - F5");
+
+
+	ImGui::InputFloat("Speed", &m_fSlowMotionSpeed, 0.1f);
+	if (m_fSlowMotionSpeed > 10.0f) m_fSlowMotionSpeed = 10.0f;
+	if (m_fSlowMotionSpeed < 0.0f) m_fSlowMotionSpeed = 0.0f;
+	ImGui::Checkbox("Enable", &m_bSlowMotion);
+	ImGui::SameLine();
+	if (ImGui::Button("Reset"))
+		GetGameInfo()->SetGameSpeed(1.0f);
 }
 
 void DCFMenu::DrawCameraTab()
@@ -422,6 +475,43 @@ void DCFMenu::DrawCameraTab()
 		ImGui::InputInt("Freecam Rotation Speed", &m_nFreeCameraRotationSpeed);
 		ImGui::Checkbox("Mouse Control", &m_bMouseControl);
 	}
+
+	if (GetObj(PLAYER1) && GetObj(PLAYER2))
+	{
+		ImGui::Checkbox("Custom Cameras", &m_bCustomCameras);
+
+		if (ImGui::BeginCombo("Mode", szCurrentCameraOption))
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(szCameraModes); n++)
+			{
+				bool is_selected = (szCurrentCameraOption == szCameraModes[n]);
+				if (ImGui::Selectable(szCameraModes[n], is_selected))
+					sprintf(szCurrentCameraOption, szCameraModes[n]);
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+
+			}
+			ImGui::EndCombo();
+		}
+		m_nCurrentCustomCamera = GetCamMode(szCurrentCameraOption);
+
+		if (m_nCurrentCustomCamera == CAMERA_HEAD_TRACKING)
+		{
+			ImGui::InputFloat("Up/Down Angle Offset", &m_fAdjustCustomHeadCameraY);
+			ImGui::InputFloat("Up/Down Offset", &m_fAdjustCustomHeadCameraZ);
+			ImGui::InputFloat("Forward/Back Offset", &m_fAdjustCustomHeadCameraY2);
+			ImGui::InputFloat("Left/Right Offset", &m_fAdjustCustomHeadCameraX);
+
+			ImGui::Checkbox("Don't Flip Camera", &m_bDontFlipCamera);
+			ImGui::SameLine(); ShowHelpMarker("Use this option for head tracked cinematics.");
+			ImGui::Checkbox("Don't Readjust", &m_bDontAdjust);
+			ImGui::SameLine(); ShowHelpMarker("Some cinematics have the exact coordinates, but some despite that still look OK in FP. Ticking this won't adjust those that look don't broken.");
+
+			ImGui::TextWrapped("Recommended to set FOV value to at least 110 to make this mode look right!");
+		}
+	}
+	else
+		ImGui::Text("Custom cameras will appear once in-game!");
 
 }
 
@@ -615,6 +705,7 @@ void DCFMenu::DrawSettings()
 		ImGui::LabelText("", "Core");
 		ImGui::Separator();
 		KeyBind(&SettingsMgr->iHookMenuOpenKey, "Open/Close Menu", "menu");
+		KeyBind(&SettingsMgr->iToggleSlowMoKey, "Toggle Gamespeed/Slow Motion", "slomo");
 		ImGui::Separator();
 		ImGui::LabelText("", "Camera");
 		ImGui::Separator();

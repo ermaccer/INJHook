@@ -153,6 +153,9 @@
     <ClInclude Include="code\helper\eMouse.h">
       <Filter>Header Files\code\helper</Filter>
     </ClInclude>
+    <ClInclude Include="code\unreal\SkeletalMeshComponent.h">
+      <Filter>Header Files\code\unreal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="code\helper\eMouse.cpp">
       <Filter>Header Files\code\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="code\unreal\SkeletalMeshComponent.cpp">
+      <Filter>Header Files\code\unreal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

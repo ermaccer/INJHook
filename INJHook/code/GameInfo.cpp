@@ -56,6 +56,11 @@ void FGGameInfo::ResetStageInteractables()
 	((void(__thiscall*)(int))_addr(0xD22560))(bgnd_info);
 }
 
+void FGGameInfo::SetGameSpeed(float value)
+{
+	((void(__thiscall*)(FGGameInfo*, float))_addr(0xD675E0))(this, value);
+}
+
 
 int MKScript::GetFunctionID(char* name)
 {

@@ -161,6 +161,15 @@ LRESULT __stdcall eDirectX9Hook::WndProc(const HWND hWnd, UINT uMsg, WPARAM wPar
 	case WM_KEYDOWN:
 		if (wParam == SettingsMgr->iHookMenuOpenKey)
 			TheMenu->m_bIsActive ^= 1;
+		if (wParam == SettingsMgr->iToggleSlowMoKey)
+		{
+			TheMenu->m_bSlowMotion ^= 1;
+			if (TheMenu->m_bSlowMotion)
+				SetGameSpeed(TheMenu->m_fSlowMotionSpeed);
+			else
+				SetGameSpeed(1.0);
+			break;
+		}
 		break;
 	default:
 		break;

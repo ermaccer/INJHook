@@ -1,5 +1,5 @@
 #pragma once
-
+#include <Windows.h>
 
 // as usual, pluginmh/mugenhook
 
@@ -18,6 +18,7 @@ public:
 	bool bEnableGamepadSupport;
 
 	int iHookMenuOpenKey;
+	int iToggleSlowMoKey = VK_F5;
 	int iResetStageInteractablesKey;
 	
 	// free camera keys

@@ -42,6 +42,19 @@ void SetCharacterSpeed(PLAYER_NUM plr, float speed)
 	*(float*)(actor + 0x8C) = speed;
 }
 
+void GetCharacterPosition(PLAYER_NUM plr, FVector* pos)
+{
+	int obj = (int)GetObj(plr);
+	int actor = *(int*)(obj + 16);
+	FVector location = *(FVector*)(actor + 0xE4);
+	*pos = location;
+}
+
+void SetGameSpeed(float speed)
+{
+	GetGameInfo()->SetGameSpeed(speed);
+}
+
 void SetCharacter(PLAYER_NUM plr, int unk, char * name)
 {
 	((void(__cdecl*)(PLAYER_NUM, int, char*))0x8141A0)(plr, unk, name);
@@ -58,7 +71,10 @@ void INJHooks::HookProcessStuff()
 	Notifications->Update();
 	TheMenu->Process();
 
-
+	if (TheMenu->m_bSlowMotion)
+	{
+		if (GetGameInfo()) GetGameInfo()->SetGameSpeed(TheMenu->m_fSlowMotionSpeed);
+	}
 	if (TheMenu->m_bInfiniteMeterP1)
 	{
 		if (GetObj(PLAYER1))

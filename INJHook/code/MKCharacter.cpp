@@ -17,3 +17,8 @@ void MKCharacter::ExecuteScript(MKScript* script, int function)
 {
 	((void(__thiscall*)(int, MKScript*, int))_addr(0xA9A4B0))(*(int*)((int)this + 0x2D8), script, function);
 }
+
+USkeletalMeshComponent* MKCharacter::GetSkeleton()
+{
+	return *(USkeletalMeshComponent**)((int)this + 368);
+}

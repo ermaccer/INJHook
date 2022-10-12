@@ -156,6 +156,9 @@
     <ClInclude Include="code\unreal\SkeletalMeshComponent.h">
       <Filter>Header Files\code\unreal</Filter>
     </ClInclude>
+    <ClInclude Include="code\PlayerInfo.h">
+      <Filter>Header Files\code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -256,6 +259,9 @@
     </ClCompile>
     <ClCompile Include="code\unreal\SkeletalMeshComponent.cpp">
       <Filter>Header Files\code\unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="code\PlayerInfo.cpp">
+      <Filter>Header Files\code</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

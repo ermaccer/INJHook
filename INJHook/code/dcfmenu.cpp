@@ -196,27 +196,28 @@ void DCFMenu::Draw()
 
 	if (ImGui::BeginTabBar("##tabs"))
 	{
-		if (ImGui::BeginTabItem("Character Modifier"))
+		if (ImGui::BeginTabItem("Character"))
 		{
 			DrawCharacterTab();
 			ImGui::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("Stage Modifier"))
+		if (ImGui::BeginTabItem("Stage"))
 		{
 			DrawStageTab();
 			ImGui::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("Speed Modifier"))
-		{
-			DrawSpeedTab();
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Player Control"))
+		if (ImGui::BeginTabItem("Player"))
 		{
 			DrawPlayerTab();
 			ImGui::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("Camera Control"))
+		if (ImGui::BeginTabItem("Speed"))
+		{
+			DrawSpeedTab();
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Camera"))
 		{
 			DrawCameraTab();
 			ImGui::EndTabItem();

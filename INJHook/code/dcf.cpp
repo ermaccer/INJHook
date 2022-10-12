@@ -7,25 +7,19 @@
 #include "mk10utils.h"
 #include "GameInfo.h"
 
-int GetInfo(PLAYER_NUM plr)
+PlayerInfo* GetInfo(PLAYER_NUM plr)
 {
-	int gameinfo = *(int*)(_addr(GFG_GAME_INFO));
-	return ((int(__thiscall*)(int, PLAYER_NUM))_addr(0xD664C0))(gameinfo, plr);
+	return GetGameInfo()->GetInfo(plr);
 }
 
 MKCharacter* GetObj(PLAYER_NUM plr)
 {
-	return ((MKCharacter*(__thiscall*)(int, int))_addr(0xDAD780))(GetInfo(plr), 1);
+	return ((MKCharacter*(__thiscall*)(int, int))_addr(0xDAD780))((int)GetInfo(plr), 1);
 }
 
 void ResetStageInteractables()
 {
 	GetGameInfo()->ResetStageInteractables();
-}
-
-void SetCharacterMeter(int obj, float meter)
-{
-	((void(__thiscall*)(int, float))_addr(0xDBE230))(obj, meter);
 }
 
 void SetCharacterScale(PLAYER_NUM plr, FVector* scale)
@@ -78,23 +72,23 @@ void INJHooks::HookProcessStuff()
 	if (TheMenu->m_bInfiniteMeterP1)
 	{
 		if (GetObj(PLAYER1))
-			SetCharacterMeter(GetInfo(PLAYER1), 1.0f);
+			GetInfo(PLAYER1)->SetMeter(1.0f);
 
 	}
 	if (TheMenu->m_bInfiniteMeterP2)
 	{
 		if (GetObj(PLAYER2))
-			SetCharacterMeter(GetInfo(PLAYER2), 1.0f);
+			GetInfo(PLAYER2)->SetMeter(1.0f);
 	}
 	if (TheMenu->m_bZeroMeterP1)
 	{
 		if (GetObj(PLAYER1))
-			SetCharacterMeter(GetInfo(PLAYER1), 0.0f);
+			GetInfo(PLAYER1)->SetMeter(0.0f);
 	}
 	if (TheMenu->m_bZeroMeterP2)
 	{
 		if (GetObj(PLAYER2))
-			SetCharacterMeter(GetInfo(PLAYER2), 0.0f);
+			GetInfo(PLAYER2)->SetMeter(0.0f);
 	}
 	if (TheMenu->m_bInfiniteHealthP1)
 	{

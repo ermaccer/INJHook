@@ -21,6 +21,19 @@ MKScript* GetScript(const char* name)
 	return nullptr;
 }
 
+void FGGameInfo::SetStage(const char* stage)
+{
+	((void(__thiscall*)(FGGameInfo*, const char*))_addr(0xD89770))(this, stage);
+}
+
+void FGGameInfo::SetStageHooked(const char* stage)
+{
+	if (TheMenu->m_bStageModifier)
+		stage = TheMenu->szStageModifierStage;
+
+	SetStage(stage);
+}
+
 void FGGameInfo::SetStageAndCharacters(char * stage, char * p1, char * p2)
 {
 	((void(__thiscall*)(FGGameInfo*, char*, char*, char*))_addr(0xD89860))(this, stage,p1,p2);
@@ -54,6 +67,11 @@ void FGGameInfo::ResetStageInteractables()
 {
 	int bgnd_info = *(int*)(this + 36);
 	((void(__thiscall*)(int))_addr(0xD22560))(bgnd_info);
+}
+
+PlayerInfo* FGGameInfo::GetInfo(PLAYER_NUM plr)
+{
+	return ((PlayerInfo * (__thiscall*)(FGGameInfo*, PLAYER_NUM))_addr(0xD664C0))(this, plr);
 }
 
 void FGGameInfo::SetGameSpeed(float value)

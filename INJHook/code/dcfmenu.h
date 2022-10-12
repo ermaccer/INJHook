@@ -26,8 +26,6 @@ struct eScriptKeyBind {
 	char functionHash[128] = {};
 };
 
-// as usual, based on mh2 debug menu
-
 class DCFMenu {
 public:
 	bool	 m_bIsActive = false;

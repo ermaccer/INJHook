@@ -44,6 +44,14 @@ void OnInitializeHook()
 	InjectHook(_addr(0xDE824B), &FGGameInfo::SetStageAndCharactersHooked);
 	InjectHook(_addr(0xE56625), &FGGameInfo::SetStageAndCharactersHooked);
 
+	InjectHook(_addr(0xD8983E), &PlayerInfo::SetCharacterHooked);
+	InjectHook(_addr(0xD89A31), &PlayerInfo::SetCharacterHooked);
+	InjectHook(_addr(0xD89A86), &PlayerInfo::SetCharacterHooked);
+	InjectHook(_addr(0xE6519D), &PlayerInfo::SetCharacterHooked);
+
+	InjectHook(_addr(0xD899E8), &FGGameInfo::SetStageHooked);
+	InjectHook(_addr(0xE5649D), &FGGameInfo::SetStageHooked);
+
 	Nop(_addr(0x7BAC3C), 24);
 
 	InjectHook(_addr(0x7BAC62), &MKCamera::HookedSetPosition);

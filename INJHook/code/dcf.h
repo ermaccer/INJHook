@@ -8,7 +8,7 @@
 
 #define GFG_GAME_INFO  0x33FC6F4 
 
-#define INJHOOK_VERSION "0.3.2"
+#define INJHOOK_VERSION "0.3.3"
 
 
 PlayerInfo*		  GetInfo(PLAYER_NUM plr);

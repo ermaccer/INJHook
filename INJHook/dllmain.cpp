@@ -26,6 +26,14 @@ void WINAPI HookUpdate()
 	}
 }
 
+
+bool __fastcall SetFlagNull()
+{
+	Patch<int>(_addr(0x34A9F24), 0);
+	return 0;
+}
+
+
 void OnInitializeHook()
 {
 	if (SettingsMgr->bEnableConsoleWindow)
@@ -56,6 +64,9 @@ void OnInitializeHook()
 
 	InjectHook(_addr(0x7BAC62), &MKCamera::HookedSetPosition);
 	InjectHook(_addr(0x7BAC6D), &MKCamera::HookedSetRotation);
+
+	if (SettingsMgr->bEnable60FPSFrontend)
+		InjectHook(_addr(0xCC5060), SetFlagNull, PATCH_JUMP);
 
 	if (SettingsMgr->bEnableGamepadSupport)
 		InjectHook(_addr(0xF7548E), XInputGetState_Hook, PATCH_JUMP);

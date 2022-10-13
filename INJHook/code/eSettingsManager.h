@@ -14,6 +14,7 @@ class eSettingsManager {
 public:
 	void Init();
 
+	bool bEnable60FPSFrontend;
 	bool bEnableConsoleWindow;
 	bool bEnableGamepadSupport;
 

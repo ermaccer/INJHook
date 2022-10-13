@@ -690,7 +690,7 @@ void DCFMenu::DrawSettings()
 		ImGui::LabelText("", "Core");
 		ImGui::Separator();
 		ImGui::Checkbox("Debug Console", &SettingsMgr->bEnableConsoleWindow);
-
+		ImGui::Checkbox("60 FPS Patch", &SettingsMgr->bEnable60FPSFrontend);
 		break;
 	case KEYS:
 		if (m_bPressingKey)

@@ -13,6 +13,8 @@ void eSettingsManager::Init()
 	iHookMenuOpenKey = user.ReadInteger("Settings", "iHookMenuOpenKey", 0xFF);
 	bEnableConsoleWindow = ini.ReadBoolean("Settings", "bEnableConsoleWindow", true);
 	bEnableGamepadSupport = ini.ReadBoolean("Settings", "bEnableGamepadSupport", true);
+	bEnable60FPSFrontend = ini.ReadBoolean("Settings", "bEnable60FPSPatch", true);
+
 
 	if (iHookMenuOpenKey == 0xFF)
 		iHookMenuOpenKey = ini.ReadInteger("Settings", "iHookMenuOpenKey", VK_F1);
@@ -122,6 +124,7 @@ void eSettingsManager::SaveSettings()
 	CIniReader ini("");
 	ini.WriteBoolean("Settings", "bEnableGamepadSupport", bEnableGamepadSupport);
 	ini.WriteBoolean("Settings", "bEnableConsoleWindow", bEnableConsoleWindow);
+	ini.WriteBoolean("Settings", "bEnable60FPSPatch", bEnable60FPSFrontend);
 }
 
 void eSettingsManager::ResetKeys()
